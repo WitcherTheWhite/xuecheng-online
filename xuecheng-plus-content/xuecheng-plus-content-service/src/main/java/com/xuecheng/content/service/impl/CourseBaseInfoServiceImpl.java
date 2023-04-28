@@ -2,6 +2,7 @@ package com.xuecheng.content.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.base.model.PageParams;
 import com.xuecheng.base.model.PageResult;
 import com.xuecheng.content.mapper.CourseBaseMapper;
@@ -9,6 +10,7 @@ import com.xuecheng.content.mapper.CourseCategoryMapper;
 import com.xuecheng.content.mapper.CourseMarketMapper;
 import com.xuecheng.content.model.dto.AddCourseDto;
 import com.xuecheng.content.model.dto.CourseBaseInfoDto;
+import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
 import com.xuecheng.content.model.po.CourseBase;
 import com.xuecheng.content.model.po.CourseCategory;
@@ -88,5 +90,26 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         courseBaseInfoDto.setStName(courseCategorySt.getName());
 
         return courseBaseInfoDto;
+    }
+
+    @Override
+    public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto) {
+        Long courseId = editCourseDto.getId();
+        CourseBase courseBase = courseBaseMapper.selectById(courseId);
+        if (courseBase == null) {
+            throw new XueChengPlusException("课程不存在！");
+        }
+        if (!companyId.equals(courseBase.getCompanyId())) {
+            throw new XueChengPlusException("只能修改本机构课程！");
+        }
+        BeanUtils.copyProperties(editCourseDto, courseBase);
+        courseBase.setChangeDate(LocalDateTime.now());
+        courseBaseMapper.updateById(courseBase);
+
+        CourseMarket courseMarket = new CourseMarket();
+        BeanUtils.copyProperties(editCourseDto, courseMarket);
+        courseMarketMapper.updateById(courseMarket);
+
+        return getCourseBaseInfo(courseId);
     }
 }
