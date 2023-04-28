@@ -1,5 +1,6 @@
 package com.xuecheng.content.model.dto;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.ToString;
 
@@ -11,6 +12,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
+@ApiModel("课程查询参数")
 public class QueryCourseParamsDto {
 
     //审核状态
