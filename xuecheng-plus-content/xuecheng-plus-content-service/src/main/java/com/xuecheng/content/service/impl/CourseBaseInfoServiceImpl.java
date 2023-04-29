@@ -92,6 +92,7 @@ public class CourseBaseInfoServiceImpl implements CourseBaseInfoService {
         return courseBaseInfoDto;
     }
 
+    @Transactional
     @Override
     public CourseBaseInfoDto updateCourseBase(Long companyId, EditCourseDto editCourseDto) {
         Long courseId = editCourseDto.getId();
