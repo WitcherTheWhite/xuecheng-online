@@ -1,12 +1,11 @@
 package com.xuecheng.content.api;
 
+import com.xuecheng.content.model.dto.SaveTeachplanDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
 import com.xuecheng.content.service.TeachPlanService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -22,5 +21,11 @@ public class TeachPlanController {
     @GetMapping("/teachplan/{id}/tree-nodes")
     public List<TeachplanDto> getTeachPlanInfo(@PathVariable Long id) {
         return teachPlanService.getTeachPlanInfo(id, 1);
+    }
+
+    @ApiOperation("新增或修改课程计划")
+    @PostMapping("/teachplan")
+    public void saveTeachPlan(@RequestBody SaveTeachplanDto saveTeachplanDto) {
+        teachPlanService.saveTeachPlan(saveTeachplanDto);
     }
 }
